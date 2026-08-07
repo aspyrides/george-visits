@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visit Schedule</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%B6%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <section id="pin-gate" class="screen hidden">
+    <div class="card centered">
+      <div class="emoji-hero">👶</div>
+      <h1>Visit Schedule</h1>
+      <p class="muted">Enter the family passcode to continue.</p>
+      <form id="pin-form">
+        <input type="password" inputmode="numeric" id="pin-input" placeholder="Passcode" autocomplete="off" required>
+        <button type="submit" class="btn-primary">Continue</button>
+      </form>
+      <p id="pin-error" class="error hidden">That's not quite right — try again.</p>
+    </div>
+  </section>
+
+  <section id="profile-setup" class="screen hidden">
+    <div class="card centered">
+      <div class="emoji-hero">💐</div>
+      <h1 id="profile-heading">Who's visiting?</h1>
+      <p class="muted">So everyone can see who's booked a slot.</p>
+      <form id="profile-form">
+        <label for="profile-name">Your name</label>
+        <input type="text" id="profile-name" placeholder="e.g. Aunt Maria" required maxlength="40">
+        <label for="profile-relationship">Relationship to baby (optional)</label>
+        <select id="profile-relationship"></select>
+        <button type="submit" class="btn-primary">Continue</button>
+        <button type="button" id="profile-cancel" class="btn-link hidden">Cancel</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="main-app" class="screen hidden">
+    <header class="app-header">
+      <div class="header-title">
+        <span class="emoji">👶</span>
+        <h1 id="app-title">Visit Schedule</h1>
+      </div>
+      <div class="header-profile">
+        <span id="profile-badge"></span>
+        <button id="edit-profile-btn" class="btn-link">Edit</button>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="calendar">Calendar</button>
+      <button class="tab-btn" data-tab="day">Day view</button>
+      <button class="tab-btn" data-tab="mine">My bookings</button>
+    </nav>
+
+    <main>
+      <div id="tab-calendar" class="tab-panel">
+        <div class="month-nav">
+          <button id="prev-month" aria-label="Previous month">‹</button>
+          <h2 id="month-label"></h2>
+          <button id="next-month" aria-label="Next month">›</button>
+        </div>
+        <div class="weekday-row">
+          <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+        <div class="legend">
+          <span><i class="dot available"></i> Open</span>
+          <span><i class="dot limited"></i> Filling up</span>
+          <span><i class="dot full"></i> Fully booked</span>
+        </div>
+      </div>
+
+      <div id="tab-day" class="tab-panel hidden">
+        <div class="day-nav">
+          <button id="prev-day" aria-label="Previous day">‹</button>
+          <h2 id="day-label"></h2>
+          <button id="next-day" aria-label="Next day">›</button>
+        </div>
+        <div class="slot-list" id="slot-list"></div>
+      </div>
+
+      <div id="tab-mine" class="tab-panel hidden">
+        <h2>Your booked visits</h2>
+        <div id="my-bookings-list"></div>
+      </div>
+    </main>
+  </section>
+
+  <div id="booking-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+      <h2 id="modal-title">Book this slot</h2>
+      <p id="modal-subtitle" class="muted"></p>
+      <div id="modal-slot-guests" class="modal-guests"></div>
+      <form id="booking-form">
+        <label for="visitor-count">Number of visitors (incl. you)</label>
+        <select id="visitor-count"></select>
+        <button type="submit" class="btn-primary">Confirm booking</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
