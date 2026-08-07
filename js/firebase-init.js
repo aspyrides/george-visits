@@ -14,12 +14,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "REPLACE_ME",
-  authDomain: "REPLACE_ME.firebaseapp.com",
-  projectId: "REPLACE_ME",
-  storageBucket: "REPLACE_ME.appspot.com",
-  messagingSenderId: "REPLACE_ME",
-  appId: "REPLACE_ME",
+  apiKey: "AIzaSyDN94cYybnntTT39NfciYF92IreEvq44GI",
+  authDomain: "george-visits.firebaseapp.com",
+  projectId: "george-visits",
+  storageBucket: "george-visits.firebasestorage.app",
+  messagingSenderId: "768142201419",
+  appId: "1:768142201419:web:2f2163b1b8e9002f0973ce"
 };
 
 export const app = initializeApp(firebaseConfig);
