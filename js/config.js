@@ -7,7 +7,7 @@ export const CONFIG = {
   // Shared passcode you text/WhatsApp to family & friends. This is a light
   // deterrent, not real security — this repo (and therefore this value) is
   // public. Don't reuse a password you use anywhere else.
-  appPin: "CHANGE-ME",
+  appPin: "2707",
 
   // Max people allowed in the room at the same time.
   slotCapacity: 3,
