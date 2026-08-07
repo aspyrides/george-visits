@@ -12,6 +12,12 @@ export const CONFIG = {
   // Max people allowed in the room at the same time.
   slotCapacity: 3,
 
+  // Longest unbroken run of back-to-back half-hour slots any one person
+  // (device) may hold in a single day, e.g. 3 slots = 1.5 hours straight.
+  // A person can still have multiple separate blocks the same day (say a
+  // morning visit and an evening visit) — this only caps each block.
+  maxConsecutiveSlots: 3,
+
   // Visiting hours. Slots are generated in `slotMinutes` increments between
   // these two times. Wind-down for the baby begins at dayEnd.
   dayStart: "08:30",

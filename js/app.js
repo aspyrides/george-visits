@@ -82,6 +82,35 @@ function escapeHtml(str) {
 
 const SLOT_TIMES = generateSlotTimes();
 
+// Length of the unbroken run of back-to-back slot times (in `sortedTimes`)
+// that contains `time`, where "back-to-back" means exactly slotMinutes apart.
+function runLengthAt(sortedTimes, time) {
+  const idx = sortedTimes.indexOf(time);
+  let start = idx;
+  while (start > 0 && timeToMinutes(sortedTimes[start]) - timeToMinutes(sortedTimes[start - 1]) === CONFIG.slotMinutes) {
+    start--;
+  }
+  let end = idx;
+  while (
+    end < sortedTimes.length - 1 &&
+    timeToMinutes(sortedTimes[end + 1]) - timeToMinutes(sortedTimes[end]) === CONFIG.slotMinutes
+  ) {
+    end++;
+  }
+  return end - start + 1;
+}
+
+// A person can hold multiple separate blocks of slots on the same day, but
+// no single unbroken block may exceed CONFIG.maxConsecutiveSlots.
+function checkConsecutiveRule(existingTimesSorted, time) {
+  if (existingTimesSorted.includes(time)) return { allowed: false, reason: "ALREADY_BOOKED" };
+  const merged = [...existingTimesSorted, time].sort();
+  if (runLengthAt(merged, time) > CONFIG.maxConsecutiveSlots) {
+    return { allowed: false, reason: "RUN_LIMIT" };
+  }
+  return { allowed: true };
+}
+
 /* ---------------------------------------------------------------- *
  * LocalStorage
  * ---------------------------------------------------------------- */
@@ -316,6 +345,14 @@ function renderCalendar() {
 /* ---------------------------------------------------------------- *
  * Day view
  * ---------------------------------------------------------------- */
+function getMyBookedTimesForDate(dateISO) {
+  return SLOT_TIMES.filter((t) => {
+    const slot = slotsMap[`${dateISO}_${t}`];
+    return slot && slot.bookings.some((b) => b.uid === currentUid);
+  }).sort();
+}
+
+
 $("#prev-day").addEventListener("click", () => {
   selectedDay = addDays(selectedDay, -1);
   renderDayView();
@@ -330,6 +367,8 @@ function renderDayView() {
   const dateISO = toISODate(selectedDay);
   const list = $("#slot-list");
   list.innerHTML = "";
+
+  const myTimesToday = getMyBookedTimesForDate(dateISO);
 
   SLOT_TIMES.forEach((time) => {
     const slot = slotsMap[`${dateISO}_${time}`] || { bookings: [], totalVisitors: 0 };
@@ -364,7 +403,13 @@ function renderDayView() {
     } else if (remaining <= 0) {
       actionHtml = `<button class="btn-full" disabled>Full</button>`;
     } else {
-      actionHtml = `<button class="btn-book" data-book="${time}">Book</button>`;
+      const check = checkConsecutiveRule(myTimesToday, time);
+      if (!check.allowed) {
+        const title = `Booking this would make a run of more than ${CONFIG.maxConsecutiveSlots} consecutive slots for you`;
+        actionHtml = `<button class="btn-full" disabled title="${title}">Too long a visit</button>`;
+      } else {
+        actionHtml = `<button class="btn-book" data-book="${time}">Book</button>`;
+      }
     }
 
     card.innerHTML = `
@@ -429,6 +474,12 @@ function renderMyBookings() {
  * Booking modal
  * ---------------------------------------------------------------- */
 function openBookingModal(dateISO, time) {
+  const check = checkConsecutiveRule(getMyBookedTimesForDate(dateISO), time);
+  if (!check.allowed) {
+    showToast(`That would give you more than ${CONFIG.maxConsecutiveSlots} consecutive slots. Try a separate block instead.`, true);
+    return;
+  }
+
   pendingBooking = { dateISO, time };
   const slot = slotsMap[`${dateISO}_${time}`] || { bookings: [], totalVisitors: 0 };
   const remaining = CONFIG.slotCapacity - (slot.totalVisitors || 0);
@@ -477,6 +528,8 @@ $("#booking-form").addEventListener("submit", async (e) => {
     closeModal();
     if (err.message === "FULL") showToast("Sorry, that slot just filled up.", true);
     else if (err.message === "ALREADY_BOOKED") showToast("You already have a booking in this slot.", true);
+    else if (err.message === "RUN_LIMIT")
+      showToast(`That would give you more than ${CONFIG.maxConsecutiveSlots} consecutive slots.`, true);
     else showToast("Something went wrong. Please try again.", true);
     console.error(err);
   }
@@ -498,13 +551,28 @@ async function handleCancel(dateISO, time) {
 async function bookSlot(dateISO, time, visitorCount) {
   const profile = getProfile();
   const slotRef = doc(db, "slots", `${dateISO}_${time}`);
-  await runTransaction(db, async (tx) => {
-    const snap = await tx.get(slotRef);
-    const data = snap.exists() ? snap.data() : { date: dateISO, time, bookings: [], totalVisitors: 0 };
 
-    if ((data.bookings || []).some((b) => b.uid === currentUid)) {
-      throw new Error("ALREADY_BOOKED");
-    }
+  // Read every slot doc for this day inside the transaction (not the local
+  // slotsMap cache) so the consecutive-slot rule is enforced against fresh
+  // data, safe against two tabs booking at the same moment.
+  const dayRefs = SLOT_TIMES.map((t) => doc(db, "slots", `${dateISO}_${t}`));
+
+  await runTransaction(db, async (tx) => {
+    const daySnaps = await Promise.all(dayRefs.map((ref) => tx.get(ref)));
+
+    const myTimesToday = [];
+    daySnaps.forEach((snap, i) => {
+      if (snap.exists() && snap.data().bookings.some((b) => b.uid === currentUid)) {
+        myTimesToday.push(SLOT_TIMES[i]);
+      }
+    });
+    myTimesToday.sort();
+
+    const check = checkConsecutiveRule(myTimesToday, time);
+    if (!check.allowed) throw new Error(check.reason);
+
+    const targetSnap = daySnaps[SLOT_TIMES.indexOf(time)];
+    const data = targetSnap.exists() ? targetSnap.data() : { date: dateISO, time, bookings: [], totalVisitors: 0 };
     const newTotal = (data.totalVisitors || 0) + visitorCount;
     if (newTotal > CONFIG.slotCapacity) {
       throw new Error("FULL");
@@ -556,6 +624,9 @@ function subscribeSlots() {
  * ---------------------------------------------------------------- */
 async function init() {
   populateRelationshipSelect($("#profile-relationship"));
+  $("#day-note").textContent =
+    `Each visit can be up to ${CONFIG.maxConsecutiveSlots} consecutive slots ` +
+    `(${(CONFIG.maxConsecutiveSlots * CONFIG.slotMinutes) / 60} hrs) long.`;
 
   if (!getPinOk()) {
     showScreen("pin");

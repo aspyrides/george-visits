@@ -47,6 +47,7 @@ Everything you'd want to change day-to-day lives in [`js/config.js`](js/config.j
 - `appPin` — the shared passcode you'll send to family/friends
 - `slotCapacity` — max visitors at once (default 3)
 - `dayStart` / `dayEnd` — visiting hours (default 8:30 AM–6:30 PM; nothing is bookable after `dayEnd` so the baby's wind-down time stays protected)
+- `maxConsecutiveSlots` — longest unbroken visit any one person can book (default 3 slots = 1.5 hours). A person can still book multiple separate visits the same day — a morning one and an evening one, say — this just caps how long any single one can run.
 - `relationshipOptions` — the dropdown list of relationships to the baby
 
 ### 4. Turn on GitHub Pages
