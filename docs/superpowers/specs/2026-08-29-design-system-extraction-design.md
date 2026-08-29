@@ -80,7 +80,7 @@ verbatim. `styles.css` `@import`s both — design-sync only delivers the
 transitive `@import` closure of `styles.css` to rendered designs. The app stops
 shipping its own stylesheet and imports the library's.
 
-## Component inventory (26)
+## Component inventory (27)
 
 ### `primitives/` (11)
 
@@ -98,7 +98,7 @@ shipping its own stylesheet and imports the library's.
 | `EmojiHero` | `emoji` | `.emoji-hero` |
 | `FormError` | `children` | `.error` |
 
-### `domain/` (9)
+### `domain/` (10)
 
 | Component | Key props | Derived from |
 |---|---|---|
@@ -217,7 +217,7 @@ fully retracted; this is a mechanical check rather than reliance on care.
 3. `app` — React port, hooks, wiring.
 4. Sync + deploy — `/design-sync` run, CI workflow.
 
-Phase 2 is the largest; the design-sync verification loop across 26 components
+Phase 2 is the largest; the design-sync verification loop across 27 components
 can itself run for hours.
 
 ## Out of scope
