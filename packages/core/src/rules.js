@@ -31,7 +31,7 @@ export function checkConsecutiveRule(existingTimesSorted, time, { slotMinutes, m
   if (existingTimesSorted.includes(time)) {
     return { allowed: false, reason: "ALREADY_BOOKED" };
   }
-  const merged = [...existingTimesSorted, time].sort();
+  const merged = [...existingTimesSorted, time].sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
   if (runLengthAt(merged, time, slotMinutes) > maxConsecutiveSlots) {
     return { allowed: false, reason: "RUN_LIMIT" };
   }

@@ -47,6 +47,10 @@ describe("checkConsecutiveRule", () => {
     expect(checkConsecutiveRule(["09:00", "09:30"], "10:00", CFG)).toEqual({ allowed: true });
   });
 
+  it("allows extending a run backwards to exactly the limit", () => {
+    expect(checkConsecutiveRule(["09:30", "10:00"], "09:00", CFG)).toEqual({ allowed: true });
+  });
+
   it("rejects extending a run past the limit", () => {
     expect(checkConsecutiveRule(["09:00", "09:30", "10:00"], "10:30", CFG)).toEqual({
       allowed: false,
@@ -90,5 +94,12 @@ describe("checkConsecutiveRule", () => {
     const existing = ["09:00", "09:30"];
     checkConsecutiveRule(existing, "10:00", CFG);
     expect(existing).toEqual(["09:00", "09:30"]);
+  });
+
+  it("sorts chronologically, not lexicographically, for unpadded times", () => {
+    expect(checkConsecutiveRule(["8:30", "9:00", "9:30"], "10:00", CFG)).toEqual({
+      allowed: false,
+      reason: "RUN_LIMIT",
+    });
   });
 });

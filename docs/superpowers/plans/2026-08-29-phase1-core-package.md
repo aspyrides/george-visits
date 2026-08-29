@@ -633,7 +633,7 @@ on its own terms.
 - [ ] **Step 4: Run test to verify it passes**
 
 Run: `npm test -- packages/core/src/rules.test.js`
-Expected: PASS, 17 tests.
+Expected: PASS, 20 tests.
 
 - [ ] **Step 5: Commit**
 
@@ -767,7 +767,7 @@ Expected: PASS, 5 tests.
 - [ ] **Step 5: Run the whole suite**
 
 Run: `npm test`
-Expected: PASS, 59 tests across 5 files.
+Expected: PASS, 62 tests across 5 files.
 
 - [ ] **Step 6: Verify core really is dependency-free**
 
@@ -789,7 +789,7 @@ git commit -m "Add @gv/core error codes and package barrel"
 ## Phase 1 done-bar
 
 - `npm install` succeeds from a clean checkout.
-- `npm test` passes with 59 tests across 5 files.
+- `npm test` passes with 62 tests across 5 files.
 - `packages/core/package.json` has empty `dependencies`.
 - No DOM, Firebase, or `localStorage` reference anywhere in `packages/core/src/`.
 - The root `js/`, `css/`, and `index.html` are unchanged and the existing app still works when opened.
