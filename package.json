@@ -6,7 +6,8 @@
   "workspaces": ["packages/*"],
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "build": "npm run build --workspace @gv/ui"
   },
   "devDependencies": {
     "vitest": "^2.1.0"
