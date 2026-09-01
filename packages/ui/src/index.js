@@ -1,6 +1,11 @@
 export { AppHeader } from "./domain/AppHeader.jsx";
+export { BookingRow } from "./domain/BookingRow.jsx";
+export { CalendarGrid } from "./domain/CalendarGrid.jsx";
+export { DayCell } from "./domain/DayCell.jsx";
+export { GuestList } from "./domain/GuestList.jsx";
 export { LegendBar } from "./domain/LegendBar.jsx";
 export { PagerNav } from "./domain/PagerNav.jsx";
+export { SlotCard } from "./domain/SlotCard.jsx";
 export { StatusDot } from "./domain/StatusDot.jsx";
 export { WeekdayRow } from "./domain/WeekdayRow.jsx";
 export { Button } from "./primitives/Button.jsx";
