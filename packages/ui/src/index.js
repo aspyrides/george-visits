@@ -1,3 +1,8 @@
+export { AppHeader } from "./domain/AppHeader.jsx";
+export { LegendBar } from "./domain/LegendBar.jsx";
+export { PagerNav } from "./domain/PagerNav.jsx";
+export { StatusDot } from "./domain/StatusDot.jsx";
+export { WeekdayRow } from "./domain/WeekdayRow.jsx";
 export { Button } from "./primitives/Button.jsx";
 export { Card } from "./primitives/Card.jsx";
 export { Chip } from "./primitives/Chip.jsx";
