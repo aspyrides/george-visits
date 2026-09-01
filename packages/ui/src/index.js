@@ -19,3 +19,6 @@ export { SelectField } from "./primitives/SelectField.jsx";
 export { Tabs } from "./primitives/Tabs.jsx";
 export { TextField } from "./primitives/TextField.jsx";
 export { Toast } from "./primitives/Toast.jsx";
+export { MyBookingsTab } from "./screens/MyBookingsTab.jsx";
+export { PinGate } from "./screens/PinGate.jsx";
+export { ProfileSetup } from "./screens/ProfileSetup.jsx";
