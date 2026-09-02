@@ -152,6 +152,19 @@ main {
   padding: 16px 20px 60px;
 }
 
+/* Normalization #6 (library-only): the original app gave the tab panels their
+   width, centering and padding via the `main` element that wrapped them.
+   A standalone screen component has no such ancestor, so it would render
+   full-bleed in Storybook and in the design tool. `.app-header` and `.tabs`
+   already carry this layout themselves; this makes `.tab-panel` consistent
+   with its siblings. Phase 3 must therefore NOT re-wrap panels in a styled
+   `main`, or the padding would apply twice. */
+.tab-panel {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 20px 60px;
+}
+
 /* --- Calendar --- */
 .pager-nav {
   display: flex;
