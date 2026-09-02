@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import * as ui from "./index.js";
 
 describe("@gv/ui barrel", () => {
-  it("exports all 24 components", () => {
+  it("exports all 27 components", () => {
     for (const name of [
       "Button",
       "Card",
@@ -28,6 +28,9 @@ describe("@gv/ui barrel", () => {
       "MyBookingsTab",
       "PinGate",
       "ProfileSetup",
+      "BookingModal",
+      "CalendarTab",
+      "DayTab",
     ]) {
       expect(ui[name], `missing export: ${name}`).toBeDefined();
     }
