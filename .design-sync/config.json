@@ -1,0 +1,27 @@
+{
+  "shape": "storybook",
+  "pkg": "@gv/ui",
+  "globalName": "GvUi",
+  "storybookConfigDir": "packages/ui/.storybook",
+  "storybookStatic": ".design-sync/sb-reference",
+  "buildCmd": "npm run build",
+  "cssEntry": "dist/ds-styles.css",
+  "extraFonts": [
+    "src/styles/fonts.css"
+  ],
+  "overrides": {
+    "Modal": {
+      "cardMode": "single",
+      "primaryStory": "Default"
+    },
+    "Toast": {
+      "cardMode": "single",
+      "primaryStory": "Success"
+    },
+    "BookingModal": {
+      "cardMode": "single",
+      "primaryStory": "PartiallyBooked"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}
