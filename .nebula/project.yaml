@@ -1,0 +1,16 @@
+# Nebula Vault manifest. Metadata only: never put secrets here.
+# Review before committing: status, phase, milestones, and the purpose of each infrastructure item.
+schema: 1
+name: Visit Schedule
+slug: george-visits
+summary: A tiny, free web app for family & friends to book a 30-minute visit slot to see the new
+  baby - capped at 3 visitors at a time, no more than one booking per slot. Calendar view + day
+  view, real-time updates, hosted free on GitHub Pages.
+status: active
+phase: Restore the curly apostrophe in the empty-state message
+milestones: []
+tags: []
+links: {}
+infrastructure:
+  - provider: firebase
+    service: Firestore
